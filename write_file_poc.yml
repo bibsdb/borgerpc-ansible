@@ -1,5 +1,5 @@
 ---
-- name: Proof of Concept - Write File with Random Content
+- name: Proof of Concept - Write File with Random Content.
   hosts: localhost
   gather_facts: false
   tasks:
