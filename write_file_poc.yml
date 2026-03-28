@@ -1,19 +1,22 @@
 ---
-- name: Proof of Concept - Write File to Disk with Timestamp
+- name: Proof of Concept - Write File with Random Content
   hosts: localhost
-  gather_facts: true  # Enabled to get ansible_date_time
+  gather_facts: false
   tasks:
-    - name: Create a test file with content
+    - name: Generate a random number
+      ansible.builtin.set_fact:
+        random_id: "{{ 1000000 | random }}"
+
+    - name: Create a test file with random content
       ansible.builtin.copy:
         content: |
-          This file was created by Ansible.
-          Timestamp: {{ ansible_date_time.iso8601 }}
-          Host: {{ inventory_hostname }}
           Proof of Concept successful.
+          Run ID: {{ random_id }}
+          This content changes on every execution.
         dest: "/tmp/ansible_poc_test.txt"
         mode: '0644'
       register: file_result
 
     - name: Display confirmation
       ansible.builtin.debug:
-        msg: "File created at {{ file_result.dest }}. Status: {{ 'Changed' if file_result.changed else 'Unchanged' }}"
+        msg: "File updated with Run ID: {{ random_id }}. Status: {{ 'Changed' if file_result.changed else 'Unchanged' }}"
