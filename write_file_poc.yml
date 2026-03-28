@@ -1,15 +1,19 @@
 ---
-- name: Proof of Concept - Write File to Disk
+- name: Proof of Concept - Write File to Disk with Timestamp
   hosts: localhost
-  gather_facts: false
+  gather_facts: true  # Enabled to get ansible_date_time
   tasks:
     - name: Create a test file with content
       ansible.builtin.copy:
-        content: "This file was created by Ansible at {{ ansible_date_time.iso8601 | default('unknown time') }}.\nProof of Concept successful.\n"
+        content: |
+          This file was created by Ansible.
+          Timestamp: {{ ansible_date_time.iso8601 }}
+          Host: {{ inventory_hostname }}
+          Proof of Concept successful.
         dest: "/tmp/ansible_poc_test.txt"
         mode: '0644'
       register: file_result
 
     - name: Display confirmation
       ansible.builtin.debug:
-        msg: "File created at {{ file_result.dest }} with {{ file_result.changed | ternary('changes made', 'no changes needed') }}."
+        msg: "File created at {{ file_result.dest }}. Status: {{ 'Changed' if file_result.changed else 'Unchanged' }}"
