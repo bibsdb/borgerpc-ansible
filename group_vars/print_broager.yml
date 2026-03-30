@@ -1,4 +1,2 @@
 required_playbooks:
-  - firefox_autostart.yml
-  - firefox_set_startpage.yml
-  - desktop_set_background.yml
+  - printer_install_with_ppd.yml
