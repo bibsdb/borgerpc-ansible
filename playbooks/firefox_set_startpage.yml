@@ -1,0 +1,8 @@
+---
+- name: Set Firefox startpage
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Print message about Forefox startpage
+      ansible.builtin.debug:
+        msg: "I am setting the Firefox startpage."
