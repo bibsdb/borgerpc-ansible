@@ -1,1 +1,25 @@
+---
+- name: Master Pull Orchestrator
+  hosts: localhost
+  connection: local
+  gather_facts: yes
 
+  tasks:
+    - name: Initialize playbook list
+      set_fact:
+        required_playbooks: []
+
+    - name: Load playbooks from assigned groups
+      include_vars:
+        file: "group_vars/{{ item }}.yml"
+        name: "group_data_{{ item }}"
+      loop: "{{ my_groups | default([]) }}"
+
+    - name: Aggregate playbooks from loaded group data
+      set_fact:
+        required_playbooks: "{{ required_playbooks + (vars['group_data_' + item]['group_required_playbooks'] | default([])) }}"
+      loop: "{{ my_groups | default([]) }}"
+
+    - name: Run assigned playbooks
+      include_tasks: "{{ item }}"
+      loop: "{{ required_playbooks }}"
