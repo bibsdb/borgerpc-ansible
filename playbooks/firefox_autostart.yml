@@ -1,0 +1,8 @@
+---
+- name: Autostarts firefox
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Print Autostart Message
+      ansible.builtin.debug:
+        msg: "I am autostarting Firefox."
