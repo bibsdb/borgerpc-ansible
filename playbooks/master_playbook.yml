@@ -23,18 +23,6 @@
         required_playbooks: "{{ required_playbooks + (vars['group_data_' + item][item + '_playbooks'] | default([])) }}"
       loop: "{{ group_names }}"
 
-    - name: Debug detected group membership
-      ansible.builtin.debug:
-        var: group_names
-      tags:
-        - debug
-
-    - name: Debug aggregated required playbooks
-      ansible.builtin.debug:
-        var: required_playbooks
-      tags:
-        - debug
-
     - name: Run assigned task files
       include_tasks: "{{ playbook_item }}"
       loop: "{{ required_playbooks }}"
