@@ -9,13 +9,31 @@
       set_fact:
         required_playbooks: []
 
+    - name: Load group playbook vars
+      ansible.builtin.include_vars:
+        file: "{{ playbook_dir }}/../group_vars/{{ item }}.yml"
+        name: "group_data_{{ item }}"
+      loop: "{{ group_names }}"
+
     # group_names is an Ansible magic variable: the list of groups the current
-    # host belongs to (as defined in inventory/hosts). We look up each group's
-    # task list via a namespaced variable, e.g. borgerpc_basis_playbooks.
+    # host belongs to. We load each group's vars file and then aggregate the
+    # playbook list via the namespaced key, e.g. borgerpc_basis_playbooks.
     - name: Aggregate task files from group membership
       set_fact:
-        required_playbooks: "{{ required_playbooks + (vars[item + '_playbooks'] | default([])) }}"
+        required_playbooks: "{{ required_playbooks + (vars['group_data_' + item][item + '_playbooks'] | default([])) }}"
       loop: "{{ group_names }}"
+
+    - name: Debug detected group membership
+      ansible.builtin.debug:
+        var: group_names
+      tags:
+        - debug
+
+    - name: Debug aggregated required playbooks
+      ansible.builtin.debug:
+        var: required_playbooks
+      tags:
+        - debug
 
     - name: Run assigned task files
       include_tasks: "{{ playbook_item }}"
