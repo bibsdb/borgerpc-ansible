@@ -2,7 +2,7 @@
 # A host can be a member of multiple groups.
 
 [borgerpc_basis]
-my-fedora-1
+fedora
 
 [print_broager]
-my-fedora-1
+fedora
