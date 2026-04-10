@@ -1,6 +1,6 @@
 ---
 - name: Master Pull Orchestrator
-  hosts: localhost
+  hosts: all
   connection: local
   gather_facts: yes
 
@@ -9,17 +9,16 @@
       set_fact:
         required_playbooks: []
 
-    - name: Load playbooks from assigned groups
-      include_vars:
-        file: "group_vars/{{ item }}.yml"
-        name: "group_data_{{ item }}"
-      loop: "{{ my_groups | default([]) }}"
-
-    - name: Aggregate playbooks from loaded group data
+    # group_names is an Ansible magic variable: the list of groups the current
+    # host belongs to (as defined in inventory/hosts). We look up each group's
+    # task list via a namespaced variable, e.g. borgerpc_basis_playbooks.
+    - name: Aggregate task files from group membership
       set_fact:
-        required_playbooks: "{{ required_playbooks + (vars['group_data_' + item]['group_required_playbooks'] | default([])) }}"
-      loop: "{{ my_groups | default([]) }}"
+        required_playbooks: "{{ required_playbooks + (vars[item + '_playbooks'] | default([])) }}"
+      loop: "{{ group_names }}"
 
-    - name: Run assigned playbooks
-      include_tasks: "{{ item }}"
+    - name: Run assigned task files
+      include_tasks: "{{ playbook_item }}"
       loop: "{{ required_playbooks }}"
+      loop_control:
+        loop_var: playbook_item

@@ -1,8 +1,4 @@
 ---
-- name: Install printer with PPD
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Print message about installing printer
-      ansible.builtin.debug:
-        msg: "I am installing a printer."
+- name: Print message about installing printer
+  ansible.builtin.debug:
+    msg: "I am installing a printer."

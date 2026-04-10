@@ -1,8 +1,4 @@
 ---
-- name: Sets the desktop background
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Print message about setting the desktop background
-      ansible.builtin.debug:
-        msg: "I am setting the desktop background"
+- name: Print message about setting the desktop background
+  ansible.builtin.debug:
+    msg: "I am setting the desktop background"

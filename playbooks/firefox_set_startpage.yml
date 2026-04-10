@@ -1,0 +1,4 @@
+---
+- name: Print message about setting Firefox start page
+  ansible.builtin.debug:
+    msg: "I am setting the Firefox start page."

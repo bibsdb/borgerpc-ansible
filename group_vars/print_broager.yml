@@ -1,2 +1,2 @@
-required_playbooks:
+print_broager_playbooks:
   - printer_install_with_ppd.yml
